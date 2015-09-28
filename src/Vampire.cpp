@@ -4,7 +4,7 @@
 
 #include "Vampire.h"
 #include "czmq.h"
-#include "g2log.hpp"
+#include "g3log/g3log.hpp"
 #include "Death.h"
 
 
@@ -104,9 +104,9 @@ bool Vampire::PrepareToBeShot() {
             mBody = NULL;
             LOG(WARNING) << "Vampire Can't bind : " << result;
             return false;
-         } else {
-            setIpcFilePermissions();
          }
+         setIpcFilePermissions();
+         Death::Instance().RegisterDeathEvent(&Death::DeleteIpcFiles, mLocation);
       } else {
          int result = zsocket_connect(mBody, mLocation.c_str());
          if (result < 0) {
@@ -116,7 +116,6 @@ bool Vampire::PrepareToBeShot() {
             return false;
          }
       }
-      Death::Instance().RegisterDeathEvent(&Death::DeleteIpcFiles, mLocation);
       CZMQToolkit::PrintCurrentHighWater(mBody, "Vampire: body");
    }
    return ((mContext != NULL) && (mBody != NULL));

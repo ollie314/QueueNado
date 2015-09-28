@@ -6,7 +6,7 @@
 
 #include "Headcrab.h"
 #include "boost/thread.hpp"
-#include "g2log.hpp"
+#include <g3log/g3log.hpp>
 #include "Death.h"
 
 
@@ -23,7 +23,7 @@ Headcrab::Headcrab(const std::string& binding) : mBinding(binding), mContext(NUL
 /**
  * Default deconstructor
  */
-Headcrab::~ Headcrab() {
+Headcrab::~Headcrab() {
    if (mContext) {
       zctx_destroy(&mContext);
    }

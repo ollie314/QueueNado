@@ -3,7 +3,7 @@
 
 #include "Rifle.h"
 #include "czmq.h"
-#include "g2log.hpp"
+#include "g3log/g3log.hpp"
 #include "Death.h"
 /**
  * Construct our Rifle which is a push in our ZMQ push pull.
@@ -97,22 +97,22 @@ bool Rifle::Aim() {
          int result = zsocket_bind(mChamber, mLocation.c_str());
 
          if (result < 0) {
-            LOG(DEBUG) << "Can't bind : " << result;
+            LOG(WARNING) << "Rifle can't bind : " << result;
             zsocket_destroy(mContext, mChamber);
             mChamber = NULL;
             return false;
          }
          setIpcFilePermissions();
+         Death::Instance().RegisterDeathEvent(&Death::DeleteIpcFiles, mLocation);
       } else {
          int result = zsocket_connect(mChamber, mLocation.c_str());
          if (result < 0) {
-            LOG(DEBUG) << "Rifle Can't connect : " << result;
+            LOG(WARNING) << "Rifle can't connect : " << result;
             zsocket_destroy(mContext, mChamber);
             mChamber = NULL;
             return false;
          }
       }
-      Death::Instance().RegisterDeathEvent(&Death::DeleteIpcFiles, mLocation);
       //CZMQToolkit::PrintCurrentHighWater(mChamber, "Rifle: chamber");
    }
    return ((mContext != NULL) && (mChamber != NULL));

@@ -7,7 +7,7 @@
 
 #include <atomic>
 #include <sys/time.h>
-#include "czmq.h"
+#include <czmq.h>
 
 class RifleVampireTests : public ::testing::Test {
 public:
@@ -61,9 +61,11 @@ public:
 protected:
 
    virtual void SetUp() {
+      zctx_interrupted = false;
    };
 
    virtual void TearDown() {
+      zctx_interrupted = false;
    };
 
    void MakeBigData(size_t size) {

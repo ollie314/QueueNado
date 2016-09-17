@@ -8,10 +8,8 @@
 
 #pragma once
 #include <string>
+#include <czmq.h>
 
-
-struct _zctx_t;
-typedef struct _zctx_t zctx_t;
 /** Harpoon-Kraken is a PipeLine communication pattern used to
 *  stream files or plain data from a server to a client. 
 * 
@@ -28,14 +26,17 @@ class Harpoon {
 public: 
 
    enum class Spear : std::int8_t { MISS = -1, IMPALED = 0 };
-   enum class Battling : std::int8_t { TIMEOUT = -2, INTERRUPT = -1, VICTORIOUS = 0, CONTINUE = 1 };
+   enum class Battling : std::int8_t { TIMEOUT = -2, INTERRUPT = -1, VICTORIOUS = 0, CONTINUE = 1, CANCEL = 2 };
 
    Harpoon();
 
    Spear Aim(const std::string& location);
    void MaxWaitInMs(const int timeoutMs);
    Battling Heave(std::vector<uint8_t>& data);
+   Battling Cancel();
    virtual ~Harpoon();
+
+   std::string EnumToString(Battling type) const;
 
 protected:
    Battling PollTimeout(int timeoutMs);

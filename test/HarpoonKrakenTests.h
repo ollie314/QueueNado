@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <FileIO.h>
+#include <czmq.h>
 
 class HarpoonKrakenTests : public ::testing::Test {
 public:
@@ -19,6 +20,7 @@ public:
    static void* SendThreadSendThirtyDie(void* arg);
    static void* SendThreadSendThirtyTwoEnd(void* arg);
    static void* SendHello(void* arg);
+   static void* SendHelloExpectCancel(void* arg);
    static void* SendSmallChunks(void* arg);
    static int GetTcpPort();
    static std::string GetTcpLocation(int port);
@@ -30,6 +32,7 @@ protected:
    };
 
    virtual void TearDown() {
+      zctx_interrupted = false;
    };
 
 
